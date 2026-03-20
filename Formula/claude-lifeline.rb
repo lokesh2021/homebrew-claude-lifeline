@@ -1,8 +1,8 @@
 class ClaudeLifeline < Formula
   desc "Real-time statusline for Claude Code — context, cost, git, cache hit rate, and session duration"
   homepage "https://github.com/lokesh2021/claude-lifeline"
-  url "https://github.com/lokesh2021/claude-lifeline/archive/refs/tags/v1.2.0.tar.gz"
-  sha256 "82e6b4519e25ea1354f0889740d849159ad4adf8f971fd79b3d00c14ca578a9a"
+  url "https://github.com/lokesh2021/claude-lifeline/archive/refs/tags/v1.3.0.tar.gz"
+  sha256 "0aa7b47a6892942d1b94b26bc2217b8c8db7dafe954b5fa9d09fb74df93e53b8"
   license "MIT"
 
   depends_on "jq"
@@ -11,6 +11,7 @@ class ClaudeLifeline < Formula
   def install
     bin.install "statusline.sh" => "claude-lifeline"
     bin.install "report.sh" => "claude-lifeline-report"
+    bin.install "config.sh" => "claude-lifeline-config"
   end
 
   def post_install
@@ -44,10 +45,13 @@ class ClaudeLifeline < Formula
     <<~EOS
       Restart Claude Code to activate the statusline.
 
+      Choose what to display (simple / moderate / all / custom):
+        claude-lifeline-config
+
       Weekly usage report:
         claude-lifeline-report
 
-      Optional — add to ~/.zshrc for API spend tracking:
+      Optional — add to ~/.zshrc for month-to-date API spend:
         export ANTHROPIC_ADMIN_API_KEY="sk-ant-admin01-..."
     EOS
   end
