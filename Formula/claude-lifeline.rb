@@ -15,30 +15,22 @@ class ClaudeLifeline < Formula
   end
 
   def post_install
-    settings_file = Pathname.new(Dir.home) / ".claude" / "settings.json"
-    claude_dir = Pathname.new(Dir.home) / ".claude"
-    claude_dir.mkpath
-
-    if settings_file.exist?
-      require "json"
-      begin
-        settings = JSON.parse(settings_file.read)
-        if settings.key?("statusLine")
-          opoo "statusLine already configured in ~/.claude/settings.json — skipping"
+    system "bash", "-c", <<~EOS
+      SETTINGS="$HOME/.claude/settings.json"
+      mkdir -p "$HOME/.claude"
+      if [ -f "$SETTINGS" ]; then
+        if jq -e '.statusLine' "$SETTINGS" >/dev/null 2>&1; then
+          echo "statusLine already configured — skipping"
         else
-          settings["statusLine"] = { "type" => "command", "command" => "claude-lifeline" }
-          settings_file.write(JSON.pretty_generate(settings))
-          ohai "Added statusLine config to ~/.claude/settings.json"
-        end
-      rescue JSON::ParserError
-        opoo "Could not parse ~/.claude/settings.json — add statusLine config manually"
-      end
-    else
-      settings_file.write(JSON.pretty_generate({
-        "statusLine" => { "type" => "command", "command" => "claude-lifeline" }
-      }))
-      ohai "Created ~/.claude/settings.json with statusLine config"
-    end
+          TMP=$(mktemp)
+          jq '. + {"statusLine": {"type": "command", "command": "claude-lifeline"}}' "$SETTINGS" > "$TMP" && mv "$TMP" "$SETTINGS"
+          echo "Added statusLine to ~/.claude/settings.json"
+        fi
+      else
+        printf '{"statusLine":{"type":"command","command":"claude-lifeline"}}\n' > "$SETTINGS"
+        echo "Created ~/.claude/settings.json"
+      fi
+    EOS
   end
 
   def caveats
