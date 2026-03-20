@@ -1,8 +1,8 @@
 class ClaudeLifeline < Formula
   desc "Real-time statusline for Claude Code — context, cost, git, cache hit rate, and session duration"
   homepage "https://github.com/lokesh2021/claude-lifeline"
-  url "https://github.com/lokesh2021/claude-lifeline/archive/refs/tags/v1.1.1.tar.gz"
-  sha256 "7bdcd38c2a6a75f8df111d922c7c7d4b470b3e7bd8c86408529b7acfa6fa731f"
+  url "https://github.com/lokesh2021/claude-lifeline/archive/refs/tags/v1.2.0.tar.gz"
+  sha256 "82e6b4519e25ea1354f0889740d849159ad4adf8f971fd79b3d00c14ca578a9a"
   license "MIT"
 
   depends_on "jq"
@@ -47,8 +47,7 @@ class ClaudeLifeline < Formula
       Weekly usage report:
         claude-lifeline-report
 
-      Optional env vars (add to ~/.zshrc):
-        export OBSIDIAN_VAULT="$HOME/Documents/MyVault"
+      Optional — add to ~/.zshrc for API spend tracking:
         export ANTHROPIC_ADMIN_API_KEY="sk-ant-admin01-..."
     EOS
   end
