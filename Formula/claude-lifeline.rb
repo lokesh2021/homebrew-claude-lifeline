@@ -1,8 +1,8 @@
 class ClaudeLifeline < Formula
   desc "Real-time statusline for Claude Code — context, cost, git, cache hit rate, and session duration"
   homepage "https://github.com/lokesh2021/claude-lifeline"
-  url "https://github.com/lokesh2021/claude-lifeline/archive/refs/tags/v1.3.0.tar.gz"
-  sha256 "0aa7b47a6892942d1b94b26bc2217b8c8db7dafe954b5fa9d09fb74df93e53b8"
+  url "https://github.com/lokesh2021/claude-lifeline/archive/refs/tags/v1.3.1.tar.gz"
+  sha256 "fa634a677f396b07d7a9dfb8a1341657b0022136ea97ad954d065193b38fa67f"
   license "MIT"
 
   depends_on "jq"
@@ -30,6 +30,7 @@ class ClaudeLifeline < Formula
         printf '{"statusLine":{"type":"command","command":"claude-lifeline"}}\n' > "$SETTINGS"
         echo "Created ~/.claude/settings.json"
       fi
+      claude-lifeline-config
     EOS
   end
 
