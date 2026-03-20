@@ -1,8 +1,8 @@
 class ClaudeLifeline < Formula
   desc "Real-time statusline for Claude Code — context, cost, git, cache hit rate, and session duration"
   homepage "https://github.com/lokesh2021/claude-lifeline"
-  url "https://github.com/lokesh2021/claude-lifeline/archive/refs/tags/v1.3.1.tar.gz"
-  sha256 "fa634a677f396b07d7a9dfb8a1341657b0022136ea97ad954d065193b38fa67f"
+  url "https://github.com/lokesh2021/claude-lifeline/archive/refs/tags/v1.3.2.tar.gz"
+  sha256 "389f6c44fa05e07437411223bb4fcd4e6eb094773537f33f9b13788debe9d82b"
   license "MIT"
 
   depends_on "jq"
