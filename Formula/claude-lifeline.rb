@@ -1,8 +1,8 @@
 class ClaudeLifeline < Formula
   desc "Real-time statusline for Claude Code — context, cost, git, cache hit rate, and session duration"
   homepage "https://github.com/lokesh2021/claude-lifeline"
-  url "https://github.com/lokesh2021/claude-lifeline/archive/refs/tags/v1.0.0.tar.gz"
-  sha256 "53a6f7f039e9603b4dbee53184fb06aca6a880eef1df23bf686c53c7b2c5eb6d"
+  url "https://github.com/lokesh2021/claude-lifeline/archive/refs/tags/v1.1.0.tar.gz"
+  sha256 "54935106938349daf6a1e3ff13686474188da81efc18ca3d86ad3d1129407b46"
   license "MIT"
 
   depends_on "jq"
@@ -10,23 +10,44 @@ class ClaudeLifeline < Formula
 
   def install
     bin.install "statusline.sh" => "claude-lifeline"
+    bin.install "report.sh" => "claude-lifeline-report"
+  end
+
+  def post_install
+    settings_file = Pathname.new(Dir.home) / ".claude" / "settings.json"
+    claude_dir = Pathname.new(Dir.home) / ".claude"
+    claude_dir.mkpath
+
+    if settings_file.exist?
+      require "json"
+      begin
+        settings = JSON.parse(settings_file.read)
+        if settings.key?("statusLine")
+          opoo "statusLine already configured in ~/.claude/settings.json — skipping"
+        else
+          settings["statusLine"] = { "type" => "command", "command" => "claude-lifeline" }
+          settings_file.write(JSON.pretty_generate(settings))
+          ohai "Added statusLine config to ~/.claude/settings.json"
+        end
+      rescue JSON::ParserError
+        opoo "Could not parse ~/.claude/settings.json — add statusLine config manually"
+      end
+    else
+      settings_file.write(JSON.pretty_generate({
+        "statusLine" => { "type" => "command", "command" => "claude-lifeline" }
+      }))
+      ohai "Created ~/.claude/settings.json with statusLine config"
+    end
   end
 
   def caveats
     <<~EOS
-      To enable claude-lifeline in Claude Code, add the following to
-      ~/.claude/settings.json:
+      Restart Claude Code to activate the statusline.
 
-        {
-          "statusLine": {
-            "type": "command",
-            "command": "claude-lifeline"
-          }
-        }
+      Weekly usage report:
+        claude-lifeline-report
 
-      Then restart Claude Code.
-
-      Optional — add to your ~/.zshrc for extra features:
+      Optional env vars (add to ~/.zshrc):
         export OBSIDIAN_VAULT="$HOME/Documents/MyVault"
         export ANTHROPIC_ADMIN_API_KEY="sk-ant-admin01-..."
     EOS
